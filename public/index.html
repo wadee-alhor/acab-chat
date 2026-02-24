@@ -2,73 +2,46 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>Arab Discord Chat</title>
-<style>
-body {
-  margin: 0; font-family: Arial; background-color: #2f3136; color: #fff;
-  display: flex; height: 100vh;
-}
-#sidebar {
-  width: 250px; background-color: #202225; padding: 20px; display: flex; flex-direction: column;
-}
-#users { list-style: none; padding: 0; flex: 1; overflow-y: auto; }
-#users li { padding: 5px; border-bottom: 1px solid #333; }
-#chat-container { flex: 1; display: flex; flex-direction: column; }
-#messages { flex: 1; padding: 20px; overflow-y: auto; list-style: none; margin: 0; }
-#messages li { margin-bottom: 10px; padding: 10px; background-color: #36393f; border-radius: 5px; max-width: 70%; }
-#input-container { display: flex; padding: 10px; background-color: #40444b; }
-#message { flex: 1; padding: 10px; border-radius: 5px; border: none; }
-button { padding: 10px 20px; margin-left: 10px; background-color: #7289da; border: none; border-radius: 5px; cursor: pointer; }
-button:hover { background-color: #5b6eae; }
-</style>
+<title>ACAB Chat</title>
+<link rel="stylesheet" href="style.css">
 </head>
+
 <body>
-<div id="sidebar">
-  <h2>المستخدمين أونلاين</h2>
-  <ul id="users"></ul>
+
+<div class="layout">
+
+    <div class="servers">
+        <div class="server-icon">A</div>
+        <div class="server-icon">+</div>
+    </div>
+
+    <div class="channels">
+        <h3>القنوات</h3>
+        <div class="channel"># عام</div>
+        <div class="channel"># العاب</div>
+        <div class="channel"># دردشة</div>
+    </div>
+
+    <div class="chat">
+        <div class="messages">
+            <div class="message">
+                <strong>Wade:</strong> اهلا 👋
+            </div>
+        </div>
+
+        <div class="input-box">
+            <input type="text" placeholder="اكتب رسالة...">
+            <button>إرسال</button>
+        </div>
+    </div>
+
+    <div class="members">
+        <h3>الأعضاء</h3>
+        <div class="member online">Wade</div>
+        <div class="member">User1</div>
+    </div>
+
 </div>
-<div id="chat-container">
-  <ul id="messages"></ul>
-  <div id="input-container">
-    <input id="message" placeholder="اكتب رسالتك..." autocomplete="off"/>
-    <button onclick="sendMessage()">إرسال</button>
-  </div>
-</div>
 
-<script src="/socket.io/socket.io.js"></script>
-<script>
-var socket = io();
-var username = prompt("ادخل اسمك:") || "زائر";
-socket.emit('new user', username);
-
-socket.on('update users', function(users){
-  var usersList = document.getElementById('users');
-  usersList.innerHTML = '';
-  users.forEach(u => {
-    var li = document.createElement('li');
-    li.textContent = u;
-    usersList.appendChild(li);
-  });
-});
-
-function sendMessage(){
-  var input = document.getElementById('message');
-  if(input.value.trim() !== ""){
-    socket.emit('chat message', input.value);
-    input.value = '';
-  }
-}
-
-socket.on('chat message', function(data){
-  var li = document.createElement('li');
-  li.innerHTML = "<b>" + data.user + ":</b> " + data.msg;
-  document.getElementById('messages').appendChild(li);
-  li.scrollIntoView();
-});
-
-document.getElementById('message').addEventListener('keypress', function(e){
-  if(e.key === 'Enter'){ sendMessage(); }
-});
-</script>
 </body>
 </html>
