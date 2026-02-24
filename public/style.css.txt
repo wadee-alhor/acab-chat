@@ -1,90 +1,12 @@
-body{
-    margin:0;
+body {
+    background: #2c2f33;
+    color: white;
     font-family: Arial;
-    background:#2b2d31;
-    color:white;
 }
 
-.app{
-    display:flex;
-    height:100vh;
-}
-
-.sidebar{
-    width:220px;
-    background:#1e1f22;
-    padding:15px;
-}
-
-.sidebar h2{
-    color:#5865f2;
-}
-
-.channel{
-    padding:8px;
-    margin-top:5px;
-    cursor:pointer;
-    border-radius:5px;
-}
-
-.channel:hover{
-    background:#313338;
-}
-
-.active{
-    background:#404249;
-}
-
-.chat{
-    flex:1;
-    display:flex;
-    flex-direction:column;
-}
-
-.chat-header{
-    padding:15px;
-    background:#1e1f22;
-    border-bottom:1px solid #444;
-}
-
-.messages{
-    flex:1;
-    padding:15px;
-    overflow-y:auto;
-}
-
-.msg{
-    background:#313338;
-    padding:8px;
-    margin-bottom:8px;
-    border-radius:6px;
-}
-
-.input-area{
-    display:flex;
-    padding:15px;
-    background:#1e1f22;
-}
-
-.input-area input{
-    flex:1;
-    padding:10px;
-    border:none;
-    border-radius:5px;
-    margin-right:10px;
-}
-
-.input-area button{
-    background:#5865f2;
-    border:none;
-    padding:10px 15px;
-    color:white;
-    border-radius:5px;
-    cursor:pointer;
-}
-
-.members{
-    width:220px;
-    background:#1e1f22;
-    padding:15px;
+#messages {
+    height: 300px;
+    overflow-y: scroll;
+    background: #23272a;
+    padding: 10px;
 }

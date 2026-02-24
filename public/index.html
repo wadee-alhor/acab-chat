@@ -1,67 +1,25 @@
 <!DOCTYPE html>
-<html lang="ar">
+<html>
 <head>
-<meta charset="UTF-8">
-<title>WAD</title>
-<link rel="stylesheet" href="style.css">
-<script src="/socket.io/socket.io.js"></script>
+    <title>My Discord Clone</title>
+    <link rel="stylesheet" href="style.css">
 </head>
-
 <body>
 
-<div class="app">
-
-    <!-- Sidebar Left -->
-    <div class="sidebar">
-        <h2>WAD</h2>
-        <div class="channels">
-            <div class="channel active"># عام</div>
-            <div class="channel"># ألعاب</div>
-            <div class="channel"># دردشة</div>
-        </div>
-    </div>
-
-    <!-- Chat Area -->
-    <div class="chat">
-        <div class="chat-header">
-            <h3># عام</h3>
-        </div>
-
-        <div id="messages" class="messages"></div>
-
-        <div class="input-area">
-            <input id="messageInput" placeholder="اكتب رسالة...">
-            <button onclick="sendMessage()">إرسال</button>
-        </div>
-    </div>
-
-    <!-- Right Sidebar -->
-    <div class="members">
-        <h3>الأعضاء</h3>
-        <div id="membersList"></div>
-    </div>
-
+<div id="login">
+    <input id="username" placeholder="Your name">
+    <input id="room" placeholder="Room name">
+    <button onclick="joinRoom()">Join</button>
 </div>
 
-<script>
-const socket = io();
-const messages = document.getElementById("messages");
+<div id="chat" style="display:none;">
+    <div id="messages"></div>
+    <input id="messageInput">
+    <button onclick="sendMessage()">Send</button>
+    <button onclick="startVoice()">Start Voice</button>
+</div>
 
-function sendMessage(){
-    const input = document.getElementById("messageInput");
-    if(input.value.trim() !== ""){
-        socket.emit("message", input.value);
-        input.value = "";
-    }
-}
-
-socket.on("message", msg => {
-    const div = document.createElement("div");
-    div.className = "msg";
-    div.innerText = msg;
-    messages.appendChild(div);
-});
-</script>
-
+<script src="/socket.io/socket.io.js"></script>
+<script src="client.js"></script>
 </body>
 </html>
