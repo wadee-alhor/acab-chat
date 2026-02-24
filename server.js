@@ -6,7 +6,7 @@ const jwt = require("jsonwebtoken");
 const cors = require("cors");
 const http = require("http");
 const { Server } = require("socket.io");
-const User = require("./models/User");
+const User = require("./models/User.js");
 
 const app = express();
 const server = http.createServer(app);
