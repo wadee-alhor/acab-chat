@@ -2,46 +2,66 @@
 <html lang="ar">
 <head>
 <meta charset="UTF-8">
-<title>ACAB Chat</title>
+<title>WAD</title>
 <link rel="stylesheet" href="style.css">
+<script src="/socket.io/socket.io.js"></script>
 </head>
 
 <body>
 
-<div class="layout">
+<div class="app">
 
-    <div class="servers">
-        <div class="server-icon">A</div>
-        <div class="server-icon">+</div>
+    <!-- Sidebar Left -->
+    <div class="sidebar">
+        <h2>WAD</h2>
+        <div class="channels">
+            <div class="channel active"># عام</div>
+            <div class="channel"># ألعاب</div>
+            <div class="channel"># دردشة</div>
+        </div>
     </div>
 
-    <div class="channels">
-        <h3>القنوات</h3>
-        <div class="channel"># عام</div>
-        <div class="channel"># العاب</div>
-        <div class="channel"># دردشة</div>
-    </div>
-
+    <!-- Chat Area -->
     <div class="chat">
-        <div class="messages">
-            <div class="message">
-                <strong>Wade:</strong> اهلا 👋
-            </div>
+        <div class="chat-header">
+            <h3># عام</h3>
         </div>
 
-        <div class="input-box">
-            <input type="text" placeholder="اكتب رسالة...">
-            <button>إرسال</button>
+        <div id="messages" class="messages"></div>
+
+        <div class="input-area">
+            <input id="messageInput" placeholder="اكتب رسالة...">
+            <button onclick="sendMessage()">إرسال</button>
         </div>
     </div>
 
+    <!-- Right Sidebar -->
     <div class="members">
         <h3>الأعضاء</h3>
-        <div class="member online">Wade</div>
-        <div class="member">User1</div>
+        <div id="membersList"></div>
     </div>
 
 </div>
+
+<script>
+const socket = io();
+const messages = document.getElementById("messages");
+
+function sendMessage(){
+    const input = document.getElementById("messageInput");
+    if(input.value.trim() !== ""){
+        socket.emit("message", input.value);
+        input.value = "";
+    }
+}
+
+socket.on("message", msg => {
+    const div = document.createElement("div");
+    div.className = "msg";
+    div.innerText = msg;
+    messages.appendChild(div);
+});
+</script>
 
 </body>
 </html>
