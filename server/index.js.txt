@@ -1,0 +1,32 @@
+const express = require('express');
+const http = require('http');
+const { Server } = require('socket.io');
+
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+app.use(express.static('public'));
+
+let users = [];
+
+io.on('connection', socket => {
+  socket.on('join', user => {
+    socket.user = user;
+    users.push(user);
+    io.emit('users', users);
+  });
+
+  socket.on('message', text => {
+    io.emit('message', { user: socket.user, text });
+  });
+
+  socket.on('disconnect', () => {
+    users = users.filter(u => u !== socket.user);
+    io.emit('users', users);
+  });
+});
+
+server.listen(3000, () => {
+  console.log('Server running on http://localhost:3000');
+});

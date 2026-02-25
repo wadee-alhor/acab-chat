@@ -1,0 +1,77 @@
+const socket = io();
+let user;
+let pc;
+let localStream;
+
+function login(e){
+  e.preventDefault();
+  user = username.value;
+  socket.emit('join', user);
+  login.classList.add('hidden');
+  app.classList.remove('hidden');
+}
+
+function send(){
+  if(!msg.value.trim())return;
+  socket.emit('message', msg.value);
+  msg.value='';
+}
+
+socket.on('message', d=>{
+  messages.innerHTML += `
+  <div class="hover p-2 rounded">
+    <b>${d.user}</b>: ${d.text}
+  </div>`;
+  messages.scrollTop = messages.scrollHeight;
+});
+
+socket.on('users', list=>{
+  members.innerHTML = list.map(u=>`
+    <div class="hover p-2 rounded">${u}</div>`).join('');
+});
+
+/* ===== CALL ===== */
+async function startCall(){
+  localStream = await navigator.mediaDevices.getUserMedia({audio:true});
+  pc = new RTCPeerConnection();
+  localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));
+
+  pc.ontrack = e=>{
+    remoteAudio.srcObject = e.streams[0];
+  };
+
+  pc.onicecandidate = e=>{
+    if(e.candidate) socket.emit('ice', e.candidate);
+  };
+
+  const offer = await pc.createOffer();
+  await pc.setLocalDescription(offer);
+  socket.emit('offer', offer);
+}
+
+socket.on('offer', async o=>{
+  pc = new RTCPeerConnection();
+  localStream = await navigator.mediaDevices.getUserMedia({audio:true});
+  localStream.getTracks().forEach(t=>pc.addTrack(t,localStream));
+
+  pc.ontrack = e=>{
+    remoteAudio.srcObject = e.streams[0];
+  };
+
+  pc.onicecandidate = e=>{
+    if(e.candidate) socket.emit('ice', e.candidate);
+  };
+
+  await pc.setRemoteDescription(o);
+  const answer = await pc.createAnswer();
+  await pc.setLocalDescription(answer);
+  socket.emit('answer', answer);
+});
+
+socket.on('answer', a=>{
+  pc.setRemoteDescription(a);
+});
+
+socket.on('ice', c=>{
+  pc.addIceCandidate(c);
+});
